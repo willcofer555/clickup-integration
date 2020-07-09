@@ -3,7 +3,7 @@ const router = express.Router();
 require("express-async-errors");
 const clickMap = require("../constants/mapObj");
 
-const sparkPost = require("../controllers/sparkPost");
+const sparkpost = require("../controllers/sparkPost");
 const fetch = require("node-fetch");
 
 
