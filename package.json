@@ -1,0 +1,27 @@
+{
+  "name": "consultwebs-smtp-automation",
+  "version": "1.0.0",
+  "description": "recieved email triggers added item to upclick queue",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "consultwebs"
+  ],
+  "author": "William Cofer",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "mongoose": "^5.9.20",
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express-async-await": "^1.1.0"
+  }
+}
