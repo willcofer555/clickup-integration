@@ -42,7 +42,7 @@ async function resendTask(resBody) {
 //Accepts sparkpost POSTS (redirects) emails to this endpoint
 
 router.post("/api/emails", async (req, res) => {
-  if (req) {
+  if (req.body.msys) {
     let sender = req.body[0].msys.message_event.msg_from;
     let subject = req.body[0].msys.message_event.subject;
     let messageId = req.body[0].msys.message_event.message_id;
@@ -60,6 +60,8 @@ router.post("/api/emails", async (req, res) => {
     //const taskResend = await resendTask(result);
     
     res.send(result);
+  } else if (req) {
+    res.send("Post to api/emails without email message");
   }
 });
 
