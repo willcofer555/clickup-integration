@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 require("express-async-errors");
 const clickMap = require("../constants/mapObj");
-
-const sparkpost = require("../controllers/sparkPost");
+const sparkpost = require("../controllers/sparkpost");
+const sparkEmail = require('../sparkpost/sparkhandle');
 const fetch = require("node-fetch");
 
 
@@ -13,7 +13,7 @@ async function testFetch(body) {
     console.log("Processing...");
 
     // the await eliminates the need for .then
-    const res = await fetch(clickMap.clickUrl, {
+    const res = await fetch(clickMap.v1clickUrl, {
       method: "POST",
       headers: clickMap.clickHeader,
       body: JSON.stringify(body)
@@ -30,6 +30,7 @@ async function testFetch(body) {
   }
 }
 
+
 async function resendTask(resBody) {
     if (resBody.id) {
         const res = await fetch(clickMap.clickUrl, {
@@ -42,42 +43,50 @@ async function resendTask(resBody) {
 //Accepts sparkpost POSTS (redirects) emails to this endpoint
 
 router.post("/api/emails", async (req, res) => {
-  if (req.body.msys) {
-    let sender = req.body[0].msys.message_event.msg_from;
-    let subject = req.body[0].msys.message_event.subject;
-    let messageId = req.body[0].msys.message_event.message_id;
-    let body = "";
+  if (req) {
+    let sender = req.body[0].msys.relay_message.msg_from;
+    let subject = req.body[0].msys.relay_message.content.subject;
+    let body = req.body[0].msys.relay_message.content.text; 
+    console.log(sender + ' - ' + subject + ' - ' + body );
     console.log(
       "Email From -- sender : " +
         sender +
         " , subject :  " +
         subject +
-        " , ID : " +
-        messageId
-    );
-
-    const result = await testFetch(clickMap.dataMapper(subject, sender));
+        'body : ' + body
+    ); 
+    const result = await testFetch(clickMap.v1dataMap(subject, sender, body));
     //const taskResend = await resendTask(result);
-    
     res.send(result);
-  } else if (req) {
-    res.send("Post to api/emails without email message");
+    /*
+    console.log('test post working');
+    res.send('test post working');
+    */
+  } 
+});
+
+
+
+router.post("/api/tasks", (req,res) => {
+
+  if (req) {
+    let comment = req.body.history_items[0].comment.text_content;
+
+    //async return task from id 
+    //let taskId = req.body.task_id;
+    //let fetchTask = await fetchTaskFunction(taskId);
+
+    //input fetchTask --> subject
+
+    if (comment.indexOf("@Derek") !== -1) {
+      sparkEmail.sparkSender('wcofer@consultwebs-email.com','subject', comment);
+      console.log('success');
+    } 
+
+
+    console.log(task);
+    res.send('test post working');
   }
-});
-
-
-
-
-
-
-router.get("/api/emails", sparkPost.testSparkControl);
-
-router.post("/click/test", (req, res) => {
-  console.log("clicktest : " + req);
-});
-
-router.get("/click/test", (req, res) => {
-  res.send("/click/test working");
 });
 
 module.exports = router;
