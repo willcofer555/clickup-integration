@@ -84,7 +84,7 @@ router.post("/api/tasks", (req,res) => {
     } 
 
 
-    console.log(task);
+    //console.log(task);
     res.send('test post working');
   }
 });
